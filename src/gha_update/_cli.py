@@ -11,7 +11,7 @@ from ._core import update_workflows
 @click.option(
     "config_path",
     "--config",
-    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    type=click.Path(exists=False, dir_okay=False, path_type=Path),
     default=Path("pyproject.toml"),
     help="TOML file containing a [tool.gha-update] section.",
 )

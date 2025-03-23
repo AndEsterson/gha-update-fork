@@ -5,6 +5,7 @@ Unreleased
 - Follow redirects for moved projects. {issue}`1`
 - Read `GITHUB_TOKEN` to make authenticated requests, and advise setting it if
   a rate limit is reached. {issue}`7`
+- Use default config if the config file does not exist. {issue}`14`
 
 ## Version 0.1.0
 
