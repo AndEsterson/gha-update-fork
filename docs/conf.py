@@ -35,8 +35,8 @@ html_theme_options = {
     "source_branch": "main",
     "source_directory": "docs/",
     "light_css_variables": {
-        "font-stack": "'Atkinson Hyperlegible', sans-serif",
-        "font-stack--monospace": "'Source Code Pro', monospace",
+        "font-stack": "'Atkinson Hyperlegible Next', sans-serif",
+        "font-stack--monospace": "'Atkinson Hyperlegible Mono', monospace",
     },
 }
 pygments_style = "default"
