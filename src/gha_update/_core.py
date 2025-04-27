@@ -85,12 +85,31 @@ def find_name_in_line(line: str) -> str | None:
     return "/".join(parts[:2])
 
 
+async def make_request(client: AsyncClient, url: str) -> Response:
+    response = await client.get(url, follow_redirects=True)
+
+    if response.status_code == 403:
+        raise RuntimeError(
+            "GitHub API rate limit reached. Authenticate by setting the"
+            " GITHUB_TOKEN environment variable."
+        )
+
+    return response
+
+
 async def get_versions(names: Iterable[str]) -> dict[str, tuple[str, str]]:
     tasks: dict[str, Task[Response]] = {}
+    headers: dict[str, str] = {}
 
-    async with AsyncClient(base_url="https://api.github.com") as c, TaskGroup() as tg:
+    if github_token := os.environ.get("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {github_token}"
+
+    async with (
+        AsyncClient(base_url="https://api.github.com", headers=headers) as c,
+        TaskGroup() as tg,
+    ):
         for name in names:
-            tasks[name] = tg.create_task(c.get(f"/repos/{name}/tags"))
+            tasks[name] = tg.create_task(make_request(c, f"/repos/{name}/tags"))
 
     out: dict[str, tuple[str, str]] = {}
 
