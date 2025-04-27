@@ -28,7 +28,7 @@ default_config: Config = {
 def load_config_path(path: os.PathLike[str] | str) -> Config:
     data = tomllib.loads(Path(path).read_text("utf-8"))
     config = data.get("tool", {}).get("gha-update", {})
-    return {**default_config, **config}
+    return {**default_config, **config}  # pyright: ignore
 
 
 async def update_workflows(config: Config | None = None) -> None:

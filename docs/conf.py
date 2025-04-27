@@ -1,30 +1,26 @@
-import importlib.metadata
-
-# Project --------------------------------------------------------------
-
 project = "gha-update"
-version = release = importlib.metadata.version(project).partition(".dev")[0]
-
-# General --------------------------------------------------------------
 
 default_role = "code"
+
 extensions = [
-    "sphinx.ext.extlinks",
     "myst_parser",
+    "sphinx.ext.extlinks",
 ]
+
 autodoc_member_order = "bysource"
 autodoc_typehints = "description"
 autodoc_preserve_defaults = True
-extlinks = {
-    "issue": ("https://github.com/davidism/gha-update/issues/%s", "#%s"),
-    "pr": ("https://github.com/davidism/gha-update/pull/%s", "#%s"),
-}
+
 myst_enable_extensions = [
+    "colon_fence",
     "fieldlist",
 ]
 myst_heading_anchors = 2
 
-# HTML -----------------------------------------------------------------
+extlinks = {
+    "issue": ("https://github.com/davidism/gha-update/issues/%s", "#%s"),
+    "pr": ("https://github.com/davidism/gha-update/pull/%s", "#%s"),
+}
 
 html_theme = "furo"
 html_static_path = ["_static"]
