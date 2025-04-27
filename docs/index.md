@@ -5,11 +5,12 @@ monthly updates, Dependabot PRs can still be noisy, especially for smaller or
 stable projects. This tool allows updating pins locally, when the maintainer
 wants to.
 
-## Installing
+## Install
 
-Install from PyPI in a virtualenv using an installer such as [pip]. Or install
+Install from [PyPI] in a virtualenv using an installer such as [pip]. Or install
 globally with an installer such as [pipx]:
 
+[PyPI]: https://pypi.org/project/gha-update/
 [pip]: https://pip.pypa.io
 [pipx]: https://pipx.pypa.io
 
@@ -20,6 +21,10 @@ $ pip install gha-update
 ```
 $ pipx install gha-update
 ```
+
+## Source
+
+The project is hosted on GitHub: https://github.com/davidism/gha-update.
 
 ## Running
 
