@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import tomllib
 import typing as t
 from asyncio import Task
@@ -9,7 +10,6 @@ from collections.abc import Iterable
 from collections.abc import Iterator
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
 
 from httpx import AsyncClient
 from httpx import Response
@@ -132,10 +132,35 @@ async def make_request(client: AsyncClient, url: str) -> Response:
     return response
 
 
+next_link_re = re.compile(r'<([^>]+?)>; rel="next"', flags=re.ASCII)
+
+
+async def get_highest_version(client: AsyncClient, name: str) -> tuple[str, str]:
+    tags: dict[str, str] = {}
+    url = f"/repos/{name}/tags"
+
+    while True:
+        response = await make_request(client, url)
+        tags.update({t["name"]: t["commit"]["sha"] for t in response.json()})
+        link_header = response.headers.get("link")
+
+        if link_header is None or (m := next_link_re.search(link_header)) is None:
+            break
+
+        url = m.group(1)
+
+    try:
+        return highest_version(tags)
+    except ValueError as e:
+        raise RuntimeError(
+            f"{name} has no version tags, it cannot be updated or pinned."
+        ) from e
+
+
 async def get_versions(
     base_url: str, names: Iterable[str]
 ) -> dict[str, tuple[str, str]]:
-    tasks: dict[str, Task[Response]] = {}
+    tasks: dict[str, Task[tuple[str, str]]] = {}
     headers: dict[str, str] = {}
 
     if github_token := os.environ.get("GITHUB_TOKEN"):
@@ -146,21 +171,15 @@ async def get_versions(
         TaskGroup() as tg,
     ):
         for name in names:
-            tasks[name] = tg.create_task(make_request(c, f"/repos/{name}/tags"))
+            tasks[name] = tg.create_task(get_highest_version(c, name))
 
-    out: dict[str, tuple[str, str]] = {}
-
-    for name, task in tasks.items():
-        out[name] = highest_version(task.result().json())
-
-    return out
+    return {name: task.result() for name, task in tasks.items()}
 
 
-def highest_version(tags: Iterable[Mapping[str, Any]]) -> tuple[str, str]:
-    items: dict[str, str] = {t["name"]: t["commit"]["sha"] for t in tags}
+def highest_version(tags: dict[str, str]) -> tuple[str, str]:
     versions: dict[tuple[int, ...], str] = {}
 
-    for name in items:
+    for name in tags:
         try:
             parts = tuple(int(p) for p in name.removeprefix("v").split("."))
         except ValueError:
@@ -168,8 +187,11 @@ def highest_version(tags: Iterable[Mapping[str, Any]]) -> tuple[str, str]:
 
         versions[parts] = name
 
+    if not versions:
+        raise ValueError("no valid version tags found")
+
     version = versions[max(versions)]
-    return version, items[version]
+    return version, tags[version]
 
 
 def write_workflows(

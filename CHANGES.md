@@ -11,6 +11,8 @@ Unreleased
   {issue}`6`
 - Don't fail if `workflows` folder is missing.
 - Add `ghes-host` config to access a GitHub Enterprise Server. {issue}`16`
+- Handle pagination when fetching tags. Show an error if no version tags were
+  found. {issue}`15`
 
 ## Version 0.1.0
 
