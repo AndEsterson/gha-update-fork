@@ -46,6 +46,10 @@ TOML file. The following options are available:
     `slsa-framework/slsa-github-generator` action can't work correctly when
     pinned as a hash.
 
+Making requests to GitHub's API is rate limited, with a higher limit if an
+access token is used. If the `GITHUB_TOKEN` environment variable is set, it will
+be used to authenticate requests.
+
 ```{toctree}
 :hidden:
 
