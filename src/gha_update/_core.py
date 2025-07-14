@@ -26,8 +26,14 @@ default_config: Config = {
 
 
 def load_config_path(path: os.PathLike[str] | str) -> Config:
-    data = tomllib.loads(Path(path).read_text("utf-8"))
-    config = data.get("tool", {}).get("gha-update", {})
+    path = Path(path)
+
+    if path.exists():
+        data = tomllib.loads(path.read_text("utf-8"))
+        config = data.get("tool", {}).get("gha-update", {})
+    else:
+        config = {}
+
     return {**default_config, **config}  # pyright: ignore
 
 
