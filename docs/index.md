@@ -45,6 +45,8 @@ TOML file. The following options are available:
     than the commit hash for that tag. For example, the
     `slsa-framework/slsa-github-generator` action can't work correctly when
     pinned as a hash.
+-   `ghes-host`: The hostname when using GitHub Enterprise Server.
+
 
 Making requests to GitHub's API is rate limited, with a higher limit if an
 access token is used. If the `GITHUB_TOKEN` environment variable is set, it will

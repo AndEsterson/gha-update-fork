@@ -10,6 +10,7 @@ Unreleased
   `action.yaml`/`.yml` file in folders in `.github/actions` or at the root.
   {issue}`6`
 - Don't fail if `workflows` folder is missing.
+- Add `ghes-host` config to access a GitHub Enterprise Server. {issue}`16`
 
 ## Version 0.1.0
 
