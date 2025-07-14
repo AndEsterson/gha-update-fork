@@ -6,6 +6,10 @@ Unreleased
 - Read `GITHUB_TOKEN` to make authenticated requests, and advise setting it if
   a rate limit is reached. {issue}`7`
 - Use default config if the config file does not exist. {issue}`14`
+- Update action references in action definitions. Definitions are
+  `action.yaml`/`.yml` file in folders in `.github/actions` or at the root.
+  {issue}`6`
+- Don't fail if `workflows` folder is missing.
 
 ## Version 0.1.0
 

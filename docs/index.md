@@ -29,9 +29,11 @@ The project is hosted on GitHub: https://github.com/davidism/gha-update.
 ## Running
 
 Running the `gha-update` command will update all workflow files
-(`.yaml` or `.yml`) in `.github/workflows` and subdirectories. The highest
-tag for each action is found, and the commit hash for that tag is used to update
-the pin. The version tag is added as a comment for reference.
+(`.yaml`/`.yml`) in `.github/workflows` and subdirectories, and all action
+files (`action.yaml`/`.yml`) in `.github/actions` subdirectories or the
+project root. The highest tag for each action is found, and the commit hash for
+that tag is used to update the pin. The version tag is added as a comment for
+reference.
 
 ## Configuration
 
