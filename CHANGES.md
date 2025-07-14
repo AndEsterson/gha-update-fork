@@ -1,6 +1,6 @@
 ## Version 0.2.0
 
-Unreleased
+Released 2025-07-13
 
 - Follow redirects for moved projects. {issue}`1`
 - Read `GITHUB_TOKEN` to make authenticated requests, and advise setting it if
