@@ -24,7 +24,7 @@ $ pipx install gha-update
 
 ## Source
 
-The project is hosted on GitHub: https://github.com/davidism/gha-update.
+The project is hosted on GitHub: <https://github.com/davidism/gha-update>.
 
 ## Running
 
