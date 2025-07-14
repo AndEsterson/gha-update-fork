@@ -18,10 +18,12 @@ Config = t.TypedDict(
     "Config",
     {
         "tag-only": list[str],
+        "ghes-host": str | None,
     },
 )
 default_config: Config = {
     "tag-only": [],
+    "ghes-host": None,
 }
 
 
@@ -41,13 +43,18 @@ async def update_workflows(config: Config | None = None) -> None:
     if config is None:
         config = default_config
 
+    if config["ghes-host"] is None:
+        base_url = "https://api.github.com"
+    else:
+        base_url = f"https://{config['ghes-host']}/api/v3/"
+
     workflows = read_workflows()
     actions: set[str] = set()
 
     for path_actions in workflows.values():
         actions.update(path_actions)
 
-    versions = await get_versions(actions)
+    versions = await get_versions(base_url, actions)
     write_workflows(config, workflows, versions)
 
 
@@ -125,7 +132,9 @@ async def make_request(client: AsyncClient, url: str) -> Response:
     return response
 
 
-async def get_versions(names: Iterable[str]) -> dict[str, tuple[str, str]]:
+async def get_versions(
+    base_url: str, names: Iterable[str]
+) -> dict[str, tuple[str, str]]:
     tasks: dict[str, Task[Response]] = {}
     headers: dict[str, str] = {}
 
@@ -133,7 +142,7 @@ async def get_versions(names: Iterable[str]) -> dict[str, tuple[str, str]]:
         headers["Authorization"] = f"Bearer {github_token}"
 
     async with (
-        AsyncClient(base_url="https://api.github.com", headers=headers) as c,
+        AsyncClient(base_url=base_url, headers=headers) as c,
         TaskGroup() as tg,
     ):
         for name in names:
