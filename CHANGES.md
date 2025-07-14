@@ -9,6 +9,7 @@ Unreleased
 - Update action references in action definitions. Definitions are
   `action.yaml`/`.yml` file in folders in `.github/actions` or at the root.
   {issue}`6`
+- Don't fail if `workflows` folder is missing.
 
 ## Version 0.1.0
 

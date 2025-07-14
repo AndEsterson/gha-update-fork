@@ -54,16 +54,20 @@ async def update_workflows(config: Config | None = None) -> None:
 def iter_workflows() -> Iterator[Path]:
     cwd = Path.cwd()
     gh_path = cwd / ".github"
+    workflows_path = gh_path / "workflows"
+    actions_path = gh_path / "actions"
 
-    for path in (gh_path / "workflows").iterdir():
-        if not (path.name.endswith(".yaml") or path.name.endswith(".yml")):
-            continue
+    if workflows_path.exists():
+        for path in workflows_path.iterdir():
+            if not (path.name.endswith(".yaml") or path.name.endswith(".yml")):
+                continue
 
-        yield path
+            yield path
 
-    for path in (gh_path / "actions").iterdir():
-        if (file := find_local_action(path)) is not None:
-            yield file
+    if actions_path.exists():
+        for path in actions_path.iterdir():
+            if (file := find_local_action(path)) is not None:
+                yield file
 
     if (file := find_local_action(cwd)) is not None:
         yield file
