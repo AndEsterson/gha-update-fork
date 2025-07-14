@@ -1,6 +1,6 @@
 [project]
 name = "gha-update"
-version = "0.2.0"
+version = "0.3.0.dev"
 description = "Update GitHub Actions version pins in GitHub workflow files."
 readme = "README.md"
 authors = [{ name = "David Lord" }]
