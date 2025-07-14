@@ -9,30 +9,30 @@ create one command that runs all three update environments.
 [pre-commit]: https://pre-commit.com
 [pip-tools]: https://pip-tools.readthedocs.io
 
-```ini
-[testenv:update-actions]
-labels = update
-deps = gha-update
-commands = python -m gha_update
+```{code-block} toml
+:caption: `pyproject.toml`
 
-[testenv:update-pre_commit]
-labels = update
-deps = pre-commit
-skip_install = true
-commands = pre-commit autoupdate -j4
+[dependency-groups]
+gha-update = ["gha-update"]
+pre-commit = ["pre-commit", "pre-commit-uv"]
 
-[testenv:update-requirements]
-base_python = 3.12
-labels = update
-deps = pip-tools
+[tool.tox.env.update-actions]
+labels = ["update"]
+dependency_groups = ["gha-update"]
+commands = [["python", "-m", "gha_update"]]
+
+[tool.tox.env.update-pre_commit]
+labels = ["update"]
+dependency_groups = ["pre-commit"]
 skip_install = true
-change_dir = requirements
-commands =
-    pip-compile build.in -q {posargs:-U}
-    pip-compile docs.in -q {posargs:-U}
-    pip-compile tests.in -q {posargs:-U}
-    pip-compile typing.in -q {posargs:-U}
-    pip-compile dev.in -q {posargs:-U}
+commands = [["pre-commit", "autoupdate", "--freeze", "-j4"]]
+
+[tool.tox.env.update-requirements]
+labels = ["update"]
+dependency_groups = []
+skip_install = true
+commands = [["uv", "lock", { replace = "posargs", default = ["-U"], extend = true }]]
+
 ```
 
 You can run a single environment to update the corresponding pins:
